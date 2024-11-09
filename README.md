@@ -19,31 +19,46 @@ Key Features:
 Available Commands:
 
 File System Operations:
-Command	Description
-ls [directory]	List contents of current or specified directory
-cd <directory>	Change current directory (supports relative paths)
-pwd	Print current working directory
-mkdir <dirname>	Create new directory
-rmdir <dirname>	Remove existing directory
-delete/del <filename>	Delete a file
-cp <source> <dest>	Copy a file
-mv <source> <dest>	Move a file
-cat <filename>	Display file contents
+
+ls [directory] - List contents of current or specified directory
+
+cd <directory> - Change current directory (supports relative paths)
+
+pwd - Print current working directory
+
+mkdir <dirname> - Create new directory
+
+rmdir <dirname> - Remove existing directory
+
+delete/del <filename> -	Delete a file
+
+cp <source> <dest> - Copy a file
+
+mv <source> <dest> - Move a file
+
+cat <filename> - Display file contents
 
 Device Management:
-Command	Description
-device register <name> <pin> <mode> [pull]	Register a new device (modes: in, out, adc, pwm)
-device control <name> <value>	Control device state (digital: 0/1, PWM: 0-100%)
-device read <name>	Read device state or value
-device list	List all registered devices
+
+device register <name> <pin> <mode> [pull] - Register a new device (modes: in, out, adc, pwm)
+
+device control <name> <value> -	Control device state (digital: 0/1, PWM: 0-100%)
+
+device read <name> - Read device state or value
+
+device list - List all registered devices
 
 System Operations:
-Command	Description
-memory	Display memory usage
-temp	Show CPU temperature
-reboot	Restart the Pico
+
+memory - Display memory usage
+
+temp - Show CPU temperature
+
+reboot - Restart the Pico
+
 run <script.py> [--dry-run]	Execute Python script
-help [command]	Display help information
+
+help [command] - Display help information
 
 Example Usage:
 
