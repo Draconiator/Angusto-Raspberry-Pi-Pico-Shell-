@@ -1,0 +1,5 @@
+{
+    "LED_PIN": 25,
+    "BOOT_DELAY": 3,
+    "MAIN_SCRIPT": "Angusto.py"
+}
