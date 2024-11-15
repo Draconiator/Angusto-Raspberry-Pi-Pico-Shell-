@@ -1,6 +1,6 @@
 Angusto Shell System for Raspberry Pi Pico
 
-Version 0.10.0
+Version 0.10.1
 
 System Components:
 
