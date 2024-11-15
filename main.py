@@ -4,23 +4,31 @@ import json
 import gc
 
 # Constants
-VERSION = "1.8"
+VERSION = "1.9"
 CONFIG_FILE = "config.json"
 
 # Load configuration
 def load_config():
+    # Default configuration
+    default_config = {
+        "LED_PIN": 25,
+        "BOOT_DELAY": 3,
+        "MAIN_SCRIPT": "Angusto.py"
+    }
+    
     try:
         with open(CONFIG_FILE, 'r') as f:
             print("Loading config file...")
             return json.load(f)
     except:
-        # Default configuration
-        print("Configuration not found. Loading defaults...")
-        return {
-            "LED_PIN": 25,
-            "BOOT_DELAY": 3,
-            "MAIN_SCRIPT": "Angusto.py"
-        }
+        print("Configuration not found. Creating new config file with defaults...")
+        try:
+            with open(CONFIG_FILE, 'w') as f:
+                json.dump(default_config, f)
+            print("New configuration file created successfully.")
+        except Exception as e:
+            print(f"Error creating config file: {e}")
+        return default_config
 
 # Initialize configuration
 config = load_config()

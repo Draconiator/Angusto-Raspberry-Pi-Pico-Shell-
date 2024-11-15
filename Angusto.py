@@ -10,14 +10,14 @@ led_pin = machine.Pin(25, machine.Pin.OUT)
 devman = DeviceManager()
 
 # Version upgrade to reflect major changes
-VERSION = "0.10.0"
+VERSION = "0.10.1"
 
 def error_flash(severity="minor"):
     if severity == "critical":
         flashes = 3
         duration = 0.5
     elif severity == "minor":
-        flashes = 3
+        flashes = 5
         duration = 0.1
     else:  # default/normal error
         flashes = 5
@@ -28,7 +28,7 @@ def error_flash(severity="minor"):
         time.sleep(duration)
         led_pin.value(0)
         time.sleep(duration)
-
+        
 def print_working_directory():
     print(f"Current working directory: {current_directory}")
 
@@ -318,7 +318,7 @@ def display_memory_usage(arguments=None):
     print(f"Used:      {alloc_mem / total_mem:.2%}")
 
 def reboot_pico(arguments=None):
-    print("Rebooting Raspberry Pi Pico...")
+    print("Rebooting Raspberry Pi Pico...You may need to reconnect.")
     time.sleep(1)
     machine.reset()
     
@@ -410,13 +410,23 @@ command_functions = {
     }
 }
 
-    
-def main():
-    while True:
-        led_pin.value(0)
-        welcome_msg()
-        print_storage_usage()
+def idle_flash_callback(t):
+    """Timer callback that creates a brief flash followed by an off period."""
+    led_pin.value(1)  # Turn LED on
+    time.sleep(0.1)   # Brief flash duration
+    led_pin.value(0)  # Turn LED off
 
+def main():
+    led_pin.value(0)
+    welcome_msg()
+    print_storage_usage()
+    
+    # Start a timer for the idle flash - 5000ms = 5 seconds
+    idle_timer = machine.Timer()
+    idle_timer.init(period=5000, mode=machine.Timer.PERIODIC, 
+                   callback=idle_flash_callback)
+    
+    while True:
         user_input = input(f"pico:{current_directory}> ")
         tokens = user_input.split()
 
@@ -427,6 +437,7 @@ def main():
         arguments = tokens[1:]
 
         if command in command_functions:
+            led_pin.value(1)  # Turn on LED during command execution
             if isinstance(command_functions[command], dict):
                 if len(arguments) > 0 and arguments[0] in command_functions[command]:
                     command_functions[command][arguments[0]](arguments[1:])
@@ -436,9 +447,14 @@ def main():
                         print(f"  {subcommand}")
             else:
                 command_functions[command](arguments)
+            led_pin.value(0)  # Return to idle state
         else:
             error_flash("minor")
             print(f"Invalid command: {command}")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        led_pin.value(0)  # Ensure LED is off when exiting
+        print("\nExiting...")
